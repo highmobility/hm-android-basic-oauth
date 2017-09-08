@@ -47,7 +47,7 @@ class OAuthManager {
     init {
         if (appId == "" || authUrl == "" || clientId == ""
                 || redirectScheme == "" || scope == "" || tokenUrl == "") {
-            throw IllegalArgumentException("OAuth variables not set")
+            throw IllegalArgumentException("OAuth variables not set. Set them in OAuthManager.kt")
         }
     }
 
