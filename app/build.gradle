@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+
     defaultConfig {
         applicationId "com.highmobility.basicoauth"
         minSdkVersion 21
@@ -19,23 +19,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-    }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 
-    compile(name:'hmkit', ext:'aar')
-    compile 'com.android.volley:volley:1.0.0'
+    testImplementation 'junit:junit:4.12'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    implementation('com.highmobility:hmkit-android:1.1.13@aar') {
+        transitive true
+    }
+    implementation('com.highmobility:hmkit-auto-api:1.6.3')
 }
