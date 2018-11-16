@@ -10,11 +10,11 @@ import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.highmobility.autoapi.HonkAndFlash
-import com.highmobility.hmkit.Manager
+import com.highmobility.crypto.value.DeviceSerial
+import com.highmobility.hmkit.HMKit
 import com.highmobility.hmkit.Telematics
 import com.highmobility.hmkit.error.DownloadAccessCertificateError
 import com.highmobility.hmkit.error.TelematicsError
-import com.highmobility.value.DeviceSerial
 
 class MainActivity : Activity() {
     val TAG = "Basic OAuth"
@@ -88,8 +88,8 @@ class MainActivity : Activity() {
 
         // PASTE THE SNIPPET HERE
 
-        Manager.getInstance().downloadCertificate(accessToken,
-                object : Manager.DownloadCallback {
+        HMKit.getInstance().downloadAccessCertificate(accessToken,
+                object : HMKit.DownloadCallback {
                     override fun onDownloaded(vehicleSerial: DeviceSerial) {
                         sendHonkFlash(vehicleSerial)
                     }
@@ -103,7 +103,7 @@ class MainActivity : Activity() {
     private fun sendHonkFlash(vehicleSerial: DeviceSerial) {
         // send a simple command to see everything worked
         val command = HonkAndFlash(5, 1)
-        Manager.getInstance().telematics.sendCommand(command, vehicleSerial,
+        HMKit.getInstance().telematics.sendCommand(command, vehicleSerial,
                 object : Telematics.CommandCallback {
                     override fun onCommandResponse(p0: com.highmobility.value.Bytes?) {
                         progressBar.visibility = View.GONE
