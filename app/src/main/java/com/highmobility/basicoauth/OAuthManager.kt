@@ -71,13 +71,13 @@ class OAuthManager {
                             failure : (errorMessage:String) -> Unit) {
         val code = uri.getQueryParameter("code")
         var tokenUrl = tokenUrl
+
         tokenUrl += "?client_id=" + clientId
         tokenUrl += "&code=" + code
         tokenUrl += "&redirect_uri=" + redirectScheme
 
         val request = JsonObjectRequest(Request.Method.POST, tokenUrl, null,
                 Response.Listener { jsonObject ->
-
             try {
                 Log.d(TAG, "response " + jsonObject.toString(2))
                 val accessToken = jsonObject["access_token"] as String
@@ -113,6 +113,5 @@ class OAuthManager {
         } catch (authFailureError: AuthFailureError) {
             authFailureError.printStackTrace()
         }
-
     }
 }

@@ -78,7 +78,7 @@ class MainActivity : Activity() {
          * By the end of the tutorial you will have a snippet for initialisation,
          * that looks something like this:
          *
-         *   Manager.getInstance().initialize(
+         *   HMKit.getInstance().initialise(
          *     Base64String,
          *     Base64String,
          *     Base64String,
@@ -88,16 +88,15 @@ class MainActivity : Activity() {
 
         // PASTE THE SNIPPET HERE
 
-        HMKit.getInstance().downloadAccessCertificate(accessToken,
-                object : HMKit.DownloadCallback {
-                    override fun onDownloaded(vehicleSerial: DeviceSerial) {
-                        sendHonkFlash(vehicleSerial)
-                    }
+        HMKit.getInstance().downloadAccessCertificate(accessToken, object : HMKit.DownloadCallback {
+            override fun onDownloaded(vehicleSerial: DeviceSerial) {
+                sendHonkFlash(vehicleSerial)
+            }
 
-                    override fun onDownloadFailed(error: DownloadAccessCertificateError) {
-                        onError("error downloading access certificate" + error.type + " " + error.message)
-                    }
-                })
+            override fun onDownloadFailed(error: DownloadAccessCertificateError) {
+                onError("error downloading access certificate" + error.type + " " + error.message)
+            }
+        })
     }
 
     private fun sendHonkFlash(vehicleSerial: DeviceSerial) {
