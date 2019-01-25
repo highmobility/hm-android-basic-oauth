@@ -14,3 +14,7 @@ Before running the app, make sure to configure the following:
 # Run the app
 
 Run the app on your phone and start the OAuth process. Once completed you will receive an `Access Token` that is passed into HMKit to download access certificates for the car. With this, the device has been authorised.
+
+# Questions or Comments ?
+
+If you have questions or if you would like to send us feedback, join our [Slack Channel](https://slack.high-mobility.com/) or email us at [support@high-mobility.com](mailto:support@high-mobility.com).
