@@ -15,7 +15,7 @@ import com.highmobility.hmkit.error.DownloadAccessCertificateError
 import com.highmobility.hmkit.error.TelematicsError
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : Activity() {
+class BasicOAuthActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
