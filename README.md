@@ -8,7 +8,7 @@ Before running the app, make sure to configure the following:
 
 1. in `BasicOAuthActivity.kt`: Initialise HMKit with a valid device certificate from the Developer Center https://high-mobility.com/develop/
 2. In the Developer Center, go to the `OAuth2 Client` settings page
-3. Copy and insert the Client ID, Client Secret, Auth URI, Token URI, URL Scheme, App Id and scope into the instance variables of `OAuthManager.kt`. No worries, all of this is written on OAuth page
+3. Copy and insert the Auth URI, Client ID, redirectScheme (URL-scheme for iOS & Android), Token URI, and an app's Serial # / AppId, into the instance variables of `BasicOAuthActivity.kt`. All of this is written on the OAuth page: https://high-mobility.com/profile/oauth-client
 4. Set the scopes for which you ask permissions - the full list is here https://high-mobility.com/learn/documentation/auto-api/api-structure/permissions
 
 # Run the app
