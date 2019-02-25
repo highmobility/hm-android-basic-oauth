@@ -48,7 +48,6 @@ class BasicOAuthActivity : Activity() {
                 applicationContext
         )
 
-
         /*
          Before using the OAuth, it's required variables must be set:
          - go to https://high-mobility.com/profile/oauth-client to get and paste:
@@ -64,6 +63,7 @@ class BasicOAuthActivity : Activity() {
         button.setOnClickListener {
             // TODO: SET THE OAUTH VARIABLES
             HMKit.getInstance().oAuth.getAccessToken(
+                    this,
                     "",
                     "",
                     "",
@@ -73,6 +73,7 @@ class BasicOAuthActivity : Activity() {
                     null,
                     null
             ) { accessToken, errorMessage ->
+
                 if (accessToken != null) {
                     onAccessTokenDownloaded(accessToken)
                 }
@@ -82,9 +83,10 @@ class BasicOAuthActivity : Activity() {
             }
         }
 
-
         // optional: if have downloaded the certificate previously, can access it from HMKit storage.
         val serial = DeviceSerial("000000000000000000")
+        // optional: if have downloaded the certificate previously, can access it from HMKit storage.
+        
         val cert = HMKit.getInstance().getCertificate(serial)
         if (cert != null) {
             downloadVehicleStatus(cert.gainerSerial)
