@@ -85,7 +85,6 @@ class BasicOAuthActivity : Activity() {
 
         // optional: if have downloaded the certificate previously, can access it from HMKit storage.
         val serial = DeviceSerial("000000000000000000")
-        // optional: if have downloaded the certificate previously, can access it from HMKit storage.
         
         val cert = HMKit.getInstance().getCertificate(serial)
         if (cert != null) {
