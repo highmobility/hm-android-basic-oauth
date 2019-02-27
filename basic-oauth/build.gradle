@@ -38,7 +38,7 @@ dependencies {
         implementation project(path: ':hmkit-utils')
     }
 
-    implementation('com.highmobility:hmkit-auto-api:1.9.0') {
+    implementation("com.highmobility:hmkit-auto-api:${rootProject.ext.autoApiVersion}") {
         exclude group: 'com.highmobility', module: 'hmkit-utils'
     }
 
