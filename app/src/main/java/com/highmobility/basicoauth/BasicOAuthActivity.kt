@@ -64,7 +64,7 @@ class BasicOAuthActivity : Activity() {
         button.setOnClickListener {
             // TODO: SET THE OAUTH VARIABLES
             HMKit.getInstance().oAuth.getAccessToken(
-                    "",
+                    this,
                     "",
                     "",
                     "",
