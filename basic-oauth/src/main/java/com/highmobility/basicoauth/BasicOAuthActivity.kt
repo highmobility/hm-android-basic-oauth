@@ -64,12 +64,11 @@ class BasicOAuthActivity : Activity() {
             // TODO: SET THE OAUTH VARIABLES
             HMKit.getInstance().oAuth.getAccessToken(
                     this,
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    null,
+                    "appId",
+                    "authUrl",
+                    "clientId",
+                    "redirectScheme",
+                    "tokenUrl",
                     null,
                     null
             ) { accessToken, errorMessage ->
