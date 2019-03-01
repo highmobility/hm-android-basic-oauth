@@ -40,13 +40,7 @@ class BasicOAuthActivity : Activity() {
           );
         */
 
-        // TODO: REPLACE THE INITIALISE SNIPPET HERE
-        HMKit.getInstance().initialise(
-                "",
-                "",
-                "",
-                applicationContext
-        )
+        // TODO: PASTE THE INITIALISE SNIPPET HERE
 
         /*
          Before using the OAuth, it's required variables must be set:
@@ -84,7 +78,7 @@ class BasicOAuthActivity : Activity() {
 
         // optional: if have downloaded the certificate previously, can access it from HMKit storage.
         val serial = DeviceSerial("000000000000000000")
-        
+
         val cert = HMKit.getInstance().getCertificate(serial)
         if (cert != null) {
             downloadVehicleStatus(cert.gainerSerial)
