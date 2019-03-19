@@ -115,8 +115,8 @@ class BasicOAuthActivity : Activity() {
                 val command = CommandResolver.resolve(p0)
 
                 when (command) {
-                    is DiagnosticsState -> textView.text = "Got Diagnostics,\nmileage: ${command.mileage}"
-                    is Failure -> textView.text = "Get Diagnostics failure:\n\n${command.failureReason}\n${command.failureDescription}"
+                    is DiagnosticsState -> textView.text = "Got Diagnostics,\nmileage: ${command.mileage.value}"
+                    is Failure -> textView.text = "Get Diagnostics failure:\n\n${command.failureReason.value}\n${command.failureDescription.value}"
                     else -> textView.text = "Unknown command response"
                 }
             }

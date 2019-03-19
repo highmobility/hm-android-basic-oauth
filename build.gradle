@@ -18,8 +18,15 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven { url "http://jfrog.high-mobility.com/artifactory/gradle-release-local/" }
         google()
+        maven { url "http://jfrog.high-mobility.com/artifactory/gradle-release-local/" }
+        maven {
+            url "http://jfrog.high-mobility.com/artifactory/gradle-dev-local/"
+            credentials {
+                username System.properties['devReadUser']
+                password System.properties['devReadPassword']
+            }
+        }
     }
 }
 
@@ -31,6 +38,6 @@ ext {
     cryptoVersion = "1.4.2"
     utilsVersion = "1.4.2"
     hmkitVersion = "1.6.6"
-    autoApiVersion = "1.10.0"
+    autoApiVersion = "2.10.0-b"
     compileSdkVersion = 28
 }
