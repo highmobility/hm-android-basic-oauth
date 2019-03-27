@@ -1,6 +1,7 @@
 package com.highmobility.basicoauth
 
 import android.app.Activity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import com.highmobility.autoapi.CommandResolver
@@ -8,6 +9,7 @@ import com.highmobility.autoapi.DiagnosticsState
 import com.highmobility.autoapi.Failure
 import com.highmobility.autoapi.GetDiagnosticsState
 import com.highmobility.crypto.value.DeviceSerial
+import com.highmobility.hmkit.AccessTokenResponse
 import com.highmobility.hmkit.HMKit
 import com.highmobility.hmkit.HMLog
 import com.highmobility.hmkit.Telematics
@@ -16,11 +18,12 @@ import com.highmobility.hmkit.error.TelematicsError
 import kotlinx.android.synthetic.main.activity_main.*
 
 class BasicOAuthActivity : Activity() {
+    lateinit var prefs: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        prefs = getSharedPreferences("prefs", 0);
         /*
         Before using HMKit, you'll have to initialise the Manager singleton
         with a snippet from the Platform Workspace:
@@ -66,36 +69,66 @@ class BasicOAuthActivity : Activity() {
                     null,
                     null
             ) { accessToken, errorMessage ->
-
-                if (accessToken != null) {
-                    onAccessTokenDownloaded(accessToken)
-                }
-                else {
-                    onError(errorMessage!!)
-                }
+                onAccessTokenResponse(accessToken, errorMessage)
             }
         }
 
         // optional: if have downloaded the certificate previously, can access it from HMKit storage.
-        val serial = DeviceSerial("000000000000000000")
+        // Need to use the vehicle serial to get the certificate from SDK storage then:
+        /*val vehicleSerial = DeviceSerial("04D982A5955382704A")
 
-        val cert = HMKit.getInstance().getCertificate(serial)
+        val cert = HMKit.getInstance().getCertificate(vehicleSerial)
         if (cert != null) {
             downloadVehicleStatus(cert.gainerSerial)
             textView.text = "Have certificate. Sending Get Diagnostics"
-        }
+        }*/
+
+        // optional: can refresh the access token if have the refresh token for it.
+        /*val refreshToken = refreshToken
+
+        HMLog.d("refresh token: $refreshToken access token expired: ${accessTokenExpired()}")
+
+        if (accessTokenExpired() && refreshToken != null) {
+            HMKit.getInstance().oAuth.refreshAccessToken(
+                    "https://sandbox.api.high-mobility.com/v1/00781e2e-b9fe-4e4c-99fc-ac878ccdbb87/oauth/access_tokens",
+                    "90b41e71-8811-42ce-b7dd-cc5db929ddf0",
+                    refreshToken)
+            { accessToken, errorMessage ->
+                onAccessTokenResponse(accessToken, errorMessage)
+            }
+        }*/
     }
 
-    private fun onAccessTokenDownloaded(accessToken: String) {
-        HMKit.getInstance().downloadAccessCertificate(accessToken, object : HMKit.DownloadCallback {
-            override fun onDownloaded(vehicleSerial: DeviceSerial) {
-                downloadVehicleStatus(vehicleSerial)
-            }
+    var refreshToken: String?
+        get() = prefs.getString("refreshToken", null)
+        set(value) = prefs.edit().putString("refreshToken", value).apply()
 
-            override fun onDownloadFailed(error: DownloadAccessCertificateError) {
-                onError("error downloading access certificate" + error.type + " " + error.message)
-            }
-        })
+    var expireDate: Int
+        get() = prefs.getInt("expireDate", 0)
+        set(value) = prefs.edit().putInt("expireDate", value).apply()
+
+    fun accessTokenExpired(): Boolean {
+        return (System.currentTimeMillis() / 1000).toInt() > expireDate
+    }
+
+    private fun onAccessTokenResponse(accessToken: AccessTokenResponse?, errorMessage: String?) {
+        if (accessToken != null) {
+            this.refreshToken = accessToken.refreshToken
+            this.expireDate = (System.currentTimeMillis() / 1000).toInt() + accessToken.expiresIn
+
+            HMKit.getInstance().downloadAccessCertificate(accessToken.accessToken, object : HMKit.DownloadCallback {
+                override fun onDownloaded(vehicleSerial: DeviceSerial) {
+                    downloadVehicleStatus(vehicleSerial)
+                }
+
+                override fun onDownloadFailed(error: DownloadAccessCertificateError) {
+                    onError("error downloading access certificate" + error.type + " " + error.message)
+                }
+            })
+        }
+        else {
+            onError(errorMessage!!)
+        }
     }
 
     private fun downloadVehicleStatus(vehicleSerial: DeviceSerial) {
@@ -109,8 +142,8 @@ class BasicOAuthActivity : Activity() {
                 val command = CommandResolver.resolve(p0)
 
                 when (command) {
-                    is DiagnosticsState -> textView.text = "Got Diagnostics,\nmileage: ${command.mileage}"
-                    is Failure -> textView.text = "Get Diagnostics failure:\n\n${command.failureReason}\n${command.failureDescription}"
+                    is DiagnosticsState -> textView.text = "Got Diagnostics,\nmileage: ${command.mileage.value}"
+                    is Failure -> textView.text = "Get Diagnostics failure:\n\n${command.failureReason.value}\n${command.failureDescription.value}"
                     else -> textView.text = "Unknown command response"
                 }
             }
