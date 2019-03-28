@@ -17,7 +17,7 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
+        google()
         maven { url "http://jfrog.high-mobility.com/artifactory/gradle-release-local/" }
         maven {
             url "http://jfrog.high-mobility.com/artifactory/gradle-dev-local/"
@@ -26,7 +26,6 @@ allprojects {
                 password System.properties['devReadPassword']
             }
         }
-        google()
     }
 }
 
