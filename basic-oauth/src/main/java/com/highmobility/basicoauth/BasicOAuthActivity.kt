@@ -75,7 +75,7 @@ class BasicOAuthActivity : Activity() {
 
         // optional: if have downloaded the certificate previously, can access it from HMKit storage.
         // Need to use the vehicle serial to get the certificate from SDK storage then:
-        /*val vehicleSerial = DeviceSerial("04D982A5955382704A")
+        /*val vehicleSerial = DeviceSerial("000000000000000000")
 
         val cert = HMKit.getInstance().getCertificate(vehicleSerial)
         if (cert != null) {
@@ -90,8 +90,8 @@ class BasicOAuthActivity : Activity() {
 
         if (accessTokenExpired() && refreshToken != null) {
             HMKit.getInstance().oAuth.refreshAccessToken(
-                    "https://sandbox.api.high-mobility.com/v1/00781e2e-b9fe-4e4c-99fc-ac878ccdbb87/oauth/access_tokens",
-                    "90b41e71-8811-42ce-b7dd-cc5db929ddf0",
+                    "tokenUrl",
+                    "clientId",
                     refreshToken)
             { accessToken, errorMessage ->
                 onAccessTokenResponse(accessToken, errorMessage)
