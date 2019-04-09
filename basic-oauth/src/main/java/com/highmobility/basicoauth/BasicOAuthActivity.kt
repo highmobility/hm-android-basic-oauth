@@ -11,11 +11,11 @@ import com.highmobility.autoapi.GetDiagnosticsState
 import com.highmobility.crypto.value.DeviceSerial
 import com.highmobility.hmkit.AccessTokenResponse
 import com.highmobility.hmkit.HMKit
-import com.highmobility.hmkit.HMLog
 import com.highmobility.hmkit.Telematics
 import com.highmobility.hmkit.error.DownloadAccessCertificateError
 import com.highmobility.hmkit.error.TelematicsError
 import kotlinx.android.synthetic.main.activity_main.*
+import timber.log.Timber.e
 
 class BasicOAuthActivity : Activity() {
     lateinit var prefs: SharedPreferences
@@ -24,6 +24,7 @@ class BasicOAuthActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         prefs = getSharedPreferences("prefs", 0);
+
         /*
         Before using HMKit, you'll have to initialise the Manager singleton
         with a snippet from the Platform Workspace:
@@ -157,6 +158,6 @@ class BasicOAuthActivity : Activity() {
     private fun onError(msg: String) {
         progressBar.visibility = View.GONE
         textView.text = msg
-        HMLog.e(msg)
+        e(msg)
     }
 }
