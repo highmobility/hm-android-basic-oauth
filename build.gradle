@@ -18,6 +18,7 @@ buildscript {
 allprojects {
     repositories {
         google()
+        jcenter()
         maven { url "http://jfrog.high-mobility.com/artifactory/gradle-release-local/" }
         maven {
             url "http://jfrog.high-mobility.com/artifactory/gradle-dev-local/"
