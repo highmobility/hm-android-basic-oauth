@@ -36,12 +36,12 @@ dependencies {
         implementation project(path: ':hmkit-android')
         implementation project(path: ':hmkit-crypto')
         implementation project(path: ':hmkit-utils')
-        implementation deps.timber
     }
 
     implementation(deps.autoApi) {
         exclude group: 'com.highmobility', module: 'hmkit-utils'
     }
+    implementation deps.timber
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
