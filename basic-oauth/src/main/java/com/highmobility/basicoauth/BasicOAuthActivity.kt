@@ -11,11 +11,13 @@ import com.highmobility.autoapi.GetDiagnosticsState
 import com.highmobility.crypto.value.DeviceSerial
 import com.highmobility.hmkit.AccessTokenResponse
 import com.highmobility.hmkit.HMKit
-import com.highmobility.hmkit.HMLog
 import com.highmobility.hmkit.Telematics
 import com.highmobility.hmkit.error.DownloadAccessCertificateError
 import com.highmobility.hmkit.error.TelematicsError
 import kotlinx.android.synthetic.main.activity_main.*
+import timber.log.Timber
+import timber.log.Timber.e
+import timber.log.Timber.plant
 
 class BasicOAuthActivity : Activity() {
     lateinit var prefs: SharedPreferences
@@ -23,7 +25,9 @@ class BasicOAuthActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        prefs = getSharedPreferences("prefs", 0);
+        prefs = getSharedPreferences("prefs", 0)
+        plant(Timber.DebugTree())
+
         /*
         Before using HMKit, you'll have to initialise the Manager singleton
         with a snippet from the Platform Workspace:
@@ -142,8 +146,10 @@ class BasicOAuthActivity : Activity() {
                 val command = CommandResolver.resolve(p0)
 
                 when (command) {
-                    is DiagnosticsState -> textView.text = "Got Diagnostics,\nmileage: ${command.mileage.value}"
-                    is Failure -> textView.text = "Get Diagnostics failure:\n\n${command.failureReason.value}\n${command.failureDescription.value}"
+                    is DiagnosticsState -> textView.text =
+                            "Got Diagnostics,\nmileage: ${command.mileage.value}"
+                    is Failure -> textView.text =
+                            "Get Diagnostics failure:\n\n${command.failureReason.value}\n${command.failureDescription.value}"
                     else -> textView.text = "Unknown command response"
                 }
             }
@@ -157,6 +163,6 @@ class BasicOAuthActivity : Activity() {
     private fun onError(msg: String) {
         progressBar.visibility = View.GONE
         textView.text = msg
-        HMLog.e(msg)
+        e(msg)
     }
 }

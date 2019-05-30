@@ -3,12 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdkVersion ver.compileSdk
 
     defaultConfig {
         applicationId "com.highmobility.basicoauth"
         minSdkVersion 21
-        targetSdkVersion rootProject.ext.compileSdkVersion
+        targetSdkVersion ver.compileSdk
         versionCode 1
         versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -29,7 +29,7 @@ android {
 
 dependencies {
     if (project.hasProperty('releaseType') == false || project.releaseType > 0) {
-        implementation("com.highmobility:hmkit-android:${rootProject.ext.hmkitVersion}@aar") {
+        implementation(deps.hmkit) {
             transitive = true
         }
     } else {
@@ -38,9 +38,10 @@ dependencies {
         implementation project(path: ':hmkit-utils')
     }
 
-    implementation("com.highmobility:hmkit-auto-api:${rootProject.ext.autoApiVersion}") {
+    implementation(deps.autoApi) {
         exclude group: 'com.highmobility', module: 'hmkit-utils'
     }
+    implementation deps.timber
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
