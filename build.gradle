@@ -38,8 +38,8 @@ task clean(type: Delete) {
 ext.ver = [
         crypto    : "1.4.3",
         utils     : "1.4.3",
-        hmkit     : "1.6.9-dev",
-        autoApi   : "2.10.1",
+        hmkit     : "1.6.9",
+        autoApi   : "2.10.2",
         compileSdk: 28
 ]
 
