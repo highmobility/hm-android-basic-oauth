@@ -162,7 +162,7 @@ class BasicOAuthActivity : Activity() {
 
     private fun onError(msg: String) {
         progressBar.visibility = View.GONE
-        textView.text = msg
+        textView.text = "error: $msg"
         e(msg)
     }
 }
