@@ -39,7 +39,7 @@ ext.ver = [
         crypto    : "1.4.3",
         utils     : "1.4.3",
         hmkit     : "1.6.10",
-        autoApi   : "2.10.2",
+        autoApi   : "3.0.0-dev2",
         compileSdk: 28
 ]
 
