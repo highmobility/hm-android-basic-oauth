@@ -32,14 +32,14 @@ dependencies {
         implementation(deps.hmkit) {
             transitive = true
         }
-        implementation(deps.autoApi) {
-            exclude group: 'com.highmobility', module: 'hmkit-utils'
-        }
+        implementation(deps.autoApi)
+        implementation(deps.crypto)
+        implementation(deps.utils)
     } else {
         implementation project(path: ':hmkit-android')
         implementation project(path: ':hmkit-crypto')
         implementation project(path: ':hmkit-utils')
-        implementation project(path: ':hm-java-auto-api')
+        implementation project(path: ':hmkit-auto-api')
     }
 
     implementation deps.timber
