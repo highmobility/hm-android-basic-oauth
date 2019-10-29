@@ -6,14 +6,30 @@
     android:layout_height="match_parent"
     tools:context=".BasicOAuthActivity">
 
-    <Button
-        android:id="@+id/button"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="create access token"/>
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="create access token"/>
+
+        <Button
+            android:id="@+id/revoke"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="revoke"
+            android:visibility="gone"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"

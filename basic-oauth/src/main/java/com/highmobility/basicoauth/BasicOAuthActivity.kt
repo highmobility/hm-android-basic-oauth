@@ -4,20 +4,17 @@ import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
-import com.highmobility.autoapi.CommandResolver
-import com.highmobility.autoapi.DiagnosticsState
-import com.highmobility.autoapi.Failure
-import com.highmobility.autoapi.GetDiagnosticsState
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import com.highmobility.autoapi.*
+import com.highmobility.autoapi.value.Lock
 import com.highmobility.crypto.value.DeviceSerial
-import com.highmobility.hmkit.AccessTokenResponse
-import com.highmobility.hmkit.HMKit
-import com.highmobility.hmkit.Telematics
-import com.highmobility.hmkit.error.DownloadAccessCertificateError
-import com.highmobility.hmkit.error.TelematicsError
+import com.highmobility.hmkit.*
+import com.highmobility.hmkit.error.*
+import com.highmobility.value.Bytes
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
-import timber.log.Timber.e
-import timber.log.Timber.plant
+import timber.log.Timber.*
 
 class BasicOAuthActivity : Activity() {
     lateinit var prefs: SharedPreferences
@@ -77,6 +74,7 @@ class BasicOAuthActivity : Activity() {
             }
         }
 
+        workWithBluetooth()
         // optional: if have downloaded the certificate previously, can access it from HMKit storage.
         // Need to use the vehicle serial to get the certificate from SDK storage then:
         /*val vehicleSerial = DeviceSerial("000000000000000000")
@@ -102,6 +100,88 @@ class BasicOAuthActivity : Activity() {
             }
         }*/
     }
+
+    private fun workWithBluetooth() {
+        // Start Bluetooth broadcasting, so that the car can connect to this device
+        val broadcaster = HMKit.getInstance().broadcaster
+
+        if (broadcaster == null) return  // emulator
+
+        broadcaster!!.setListener(object : BroadcasterListener {
+            override fun onStateChanged(state: Broadcaster.State) {
+                d("Broadcasting state changed: %s", state)
+            }
+
+            override fun onLinkReceived(connectedLink: ConnectedLink) {
+                connectedLink.setListener(object : ConnectedLinkListener {
+                    override fun onAuthenticationRequested(connectedLink: ConnectedLink,
+                                                           authorizationCallback: ConnectedLinkListener.AuthenticationRequestCallback) {
+
+                        // Approving without user input
+                        authorizationCallback.approve()
+                    }
+
+                    override fun onAuthenticationRequestTimeout(connectedLink: ConnectedLink) {
+
+                    }
+
+                    override fun onAuthenticationFailed(link: Link?, error: AuthenticationError?) {
+
+                    }
+
+                    override fun onStateChanged(link: Link, state: Link.State) {
+                        revoke.visibility =
+                                if (link.state == Link.State.AUTHENTICATED) VISIBLE else GONE
+
+                        revoke.setOnClickListener {
+                            link.revoke(object : Link.RevokeCallback {
+                                override fun onRevokeSuccess(customData: Bytes?) {
+                                    d("revokeS")
+                                }
+
+                                override fun onRevokeFailed(error: RevokeError?) {
+                                    d("revokeF")
+                                }
+                            })
+                        }
+
+                        if (link.state == Link.State.AUTHENTICATED) {
+                            val command = GetVehicleStatus()
+                            link.sendCommand(command, object : Link.CommandCallback {
+                                override fun onCommandSent() {
+                                    d("Command successfully sent through Bluetooth")
+                                }
+
+                                override fun onCommandFailed(linkError: LinkError) {
+
+                                }
+                            })
+                        }
+                    }
+
+                    override fun onCommandReceived(link: Link, bytes: Bytes) {
+                        val command = CommandResolver.resolve(bytes)
+                        d("command " + command)
+                    }
+                })
+            }
+
+            override fun onLinkLost(connectedLink: ConnectedLink) {
+                // Bluetooth disconnected
+            }
+        })
+
+        broadcaster.startBroadcasting(object : Broadcaster.StartCallback {
+            override fun onBroadcastingStarted() {
+                d("Bluetooth broadcasting started")
+            }
+
+            override fun onBroadcastingFailed(broadcastError: BroadcastError) {
+                d("Bluetooth broadcasting started: $broadcastError")
+            }
+        })
+    }
+
 
     var refreshToken: String?
         get() = prefs.getString("refreshToken", null)
@@ -139,9 +219,9 @@ class BasicOAuthActivity : Activity() {
         progressBar.visibility = View.VISIBLE
         textView.text = "Sending Get Diagnostics"
         // send a simple command to see everything worked
-        HMKit.getInstance().telematics.sendCommand(GetDiagnosticsState(), vehicleSerial, object :
+        HMKit.getInstance().telematics.sendCommand(LockUnlockDoors(Lock.UNLOCKED), vehicleSerial, object :
                 Telematics.CommandCallback {
-            override fun onCommandResponse(p0: com.highmobility.value.Bytes?) {
+            override fun onCommandResponse(p0: Bytes?) {
                 progressBar.visibility = View.GONE
                 val command = CommandResolver.resolve(p0)
 
