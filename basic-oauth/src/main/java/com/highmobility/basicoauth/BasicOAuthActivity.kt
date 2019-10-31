@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import com.highmobility.autoapi.CommandResolver
 import com.highmobility.autoapi.DiagnosticsState
-import com.highmobility.autoapi.Failure
+import com.highmobility.autoapi.FailureMessageState
 import com.highmobility.autoapi.GetDiagnosticsState
 import com.highmobility.crypto.value.DeviceSerial
 import com.highmobility.hmkit.AccessTokenResponse
@@ -148,7 +148,7 @@ class BasicOAuthActivity : Activity() {
                 when (command) {
                     is DiagnosticsState -> textView.text =
                             "Got Diagnostics,\nmileage: ${command.mileage.value}"
-                    is Failure -> textView.text =
+                    is FailureMessageState -> textView.text =
                             "Get Diagnostics failure:\n\n${command.failureReason.value}\n${command.failureDescription.value}"
                     else -> textView.text = "Unknown command response"
                 }
