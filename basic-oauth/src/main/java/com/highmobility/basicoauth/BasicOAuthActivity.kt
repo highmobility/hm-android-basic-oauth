@@ -126,21 +126,23 @@ class BasicOAuthActivity : Activity() {
                     }
 
                     override fun onAuthenticationFailed(link: Link?, error: AuthenticationError?) {
-
+                        d("onAuthenticationFailed: %s", error?.message)
                     }
 
-                    override fun onStateChanged(link: Link, state: Link.State) {
+                    override fun onStateChanged(link: Link, newState: Link.State, oldState: Link.State) {
+                        d("onStateChanged: %s", newState)
+
                         revoke.visibility =
                                 if (link.state == Link.State.AUTHENTICATED) VISIBLE else GONE
 
                         revoke.setOnClickListener {
                             link.revoke(object : Link.RevokeCallback {
                                 override fun onRevokeSuccess(customData: Bytes?) {
-                                    d("revokeS")
+                                    d("revokeSuccess")
                                 }
 
                                 override fun onRevokeFailed(error: RevokeError?) {
-                                    d("revokeF")
+                                    d("revokeFailed")
                                 }
                             })
                         }
