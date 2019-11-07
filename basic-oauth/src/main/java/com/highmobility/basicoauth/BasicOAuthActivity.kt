@@ -113,6 +113,7 @@ class BasicOAuthActivity : Activity() {
             }
 
             override fun onLinkReceived(connectedLink: ConnectedLink) {
+                stateTextView.text = connectedLink.state.toString()
                 connectedLink.setListener(object : ConnectedLinkListener {
                     override fun onAuthenticationRequested(connectedLink: ConnectedLink,
                                                            authorizationCallback: ConnectedLinkListener.AuthenticationRequestCallback) {
@@ -131,6 +132,7 @@ class BasicOAuthActivity : Activity() {
 
                     override fun onStateChanged(link: Link, newState: Link.State, oldState: Link.State) {
                         d("onStateChanged: %s", newState)
+                        stateTextView.text = newState.toString()
 
                         revoke.visibility =
                                 if (link.state == Link.State.AUTHENTICATED) VISIBLE else GONE
@@ -169,6 +171,7 @@ class BasicOAuthActivity : Activity() {
             }
 
             override fun onLinkLost(connectedLink: ConnectedLink) {
+                stateTextView.text = ""
                 // Bluetooth disconnected
             }
         })
