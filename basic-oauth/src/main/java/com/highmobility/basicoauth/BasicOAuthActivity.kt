@@ -14,6 +14,7 @@ import com.highmobility.hmkit.HMKit
 import com.highmobility.hmkit.Telematics
 import com.highmobility.hmkit.error.DownloadAccessCertificateError
 import com.highmobility.hmkit.error.TelematicsError
+import com.highmobility.value.Bytes
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import timber.log.Timber.e
@@ -141,7 +142,7 @@ class BasicOAuthActivity : Activity() {
         // send a simple command to see everything worked
         HMKit.getInstance().telematics.sendCommand(GetDiagnosticsState(), vehicleSerial, object :
                 Telematics.CommandCallback {
-            override fun onCommandResponse(p0: com.highmobility.value.Bytes?) {
+            override fun onCommandResponse(p0: Bytes?) {
                 progressBar.visibility = View.GONE
                 val command = CommandResolver.resolve(p0)
 
