@@ -8,6 +8,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import com.highmobility.autoapi.*
 import com.highmobility.autoapi.value.Lock
+import com.highmobility.autoapi.value.LockState
 import com.highmobility.crypto.value.DeviceSerial
 import com.highmobility.hmkit.*
 import com.highmobility.hmkit.error.*
@@ -115,7 +116,7 @@ class BasicOAuthActivity : Activity() {
             override fun onLinkReceived(connectedLink: ConnectedLink) {
                 stateTextView.text = connectedLink.state.toString()
                 connectedLink.setListener(object : ConnectedLinkListener {
-                    override fun onAuthenticationRequested(connectedLink: ConnectedLink,
+                    override fun onAuthenticationRequest(connectedLink: ConnectedLink,
                                                            authorizationCallback: ConnectedLinkListener.AuthenticationRequestCallback) {
 
                         // Approving without user input
@@ -224,7 +225,7 @@ class BasicOAuthActivity : Activity() {
         progressBar.visibility = View.VISIBLE
         textView.text = "Sending Get Diagnostics"
         // send a simple command to see everything worked
-        HMKit.getInstance().telematics.sendCommand(LockUnlockDoors(Lock.UNLOCKED), vehicleSerial, object :
+        HMKit.getInstance().telematics.sendCommand(LockUnlockDoors(LockState.UNLOCKED), vehicleSerial, object :
                 Telematics.CommandCallback {
             override fun onCommandResponse(p0: Bytes?) {
                 progressBar.visibility = View.GONE
@@ -233,7 +234,7 @@ class BasicOAuthActivity : Activity() {
                 when (command) {
                     is DiagnosticsState -> textView.text =
                             "Got Diagnostics,\nmileage: ${command.mileage.value}"
-                    is Failure -> textView.text =
+                    is FailureMessageState -> textView.text =
                             "Get Diagnostics failure:\n\n${command.failureReason.value}\n${command.failureDescription.value}"
                     else -> textView.text = "Unknown command response"
                 }
