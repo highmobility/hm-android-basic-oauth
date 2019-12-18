@@ -5,9 +5,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import com.highmobility.autoapi.CommandResolver
-import com.highmobility.autoapi.DiagnosticsState
-import com.highmobility.autoapi.FailureMessageState
-import com.highmobility.autoapi.GetDiagnosticsState
+import com.highmobility.autoapi.Diagnostics
+import com.highmobility.autoapi.FailureMessage
 import com.highmobility.crypto.value.DeviceSerial
 import com.highmobility.hmkit.AccessTokenResponse
 import com.highmobility.hmkit.HMKit
@@ -140,16 +139,16 @@ class BasicOAuthActivity : Activity() {
         progressBar.visibility = View.VISIBLE
         textView.text = "Sending Get Diagnostics"
         // send a simple command to see everything worked
-        HMKit.getInstance().telematics.sendCommand(GetDiagnosticsState(), vehicleSerial, object :
+        HMKit.getInstance().telematics.sendCommand(Diagnostics.GetState(), vehicleSerial, object :
                 Telematics.CommandCallback {
             override fun onCommandResponse(p0: Bytes?) {
                 progressBar.visibility = View.GONE
                 val command = CommandResolver.resolve(p0)
 
                 when (command) {
-                    is DiagnosticsState -> textView.text =
+                    is Diagnostics.State -> textView.text =
                             "Got Diagnostics,\nmileage: ${command.mileage.value}"
-                    is FailureMessageState -> textView.text =
+                    is FailureMessage.State -> textView.text =
                             "Get Diagnostics failure:\n\n${command.failureReason.value}\n${command.failureDescription.value}"
                     else -> textView.text = "Unknown command response"
                 }
