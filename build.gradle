@@ -36,10 +36,10 @@ task clean(type: Delete) {
 
 // these are not release numbers. release numbers are in deploy.settings files.
 ext.ver = [
-        crypto    : "1.4.4-dev",
-        utils     : "1.4.4-dev",
-        hmkit     : "2.0.0-dev",
-        autoApi   : "3.11.0-dev4",
+        crypto    : "1.4.4",
+        utils     : "1.4.4",
+        hmkit     : "2.0.0",
+        autoApi   : "3.11.0",
         compileSdk: 28
 ]
 
