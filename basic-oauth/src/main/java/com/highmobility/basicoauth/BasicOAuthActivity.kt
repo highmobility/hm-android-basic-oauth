@@ -1,3 +1,26 @@
+/*
+ * The MIT License
+ *
+ * Copyright (c) 2014- High-Mobility GmbH (https://high-mobility.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package com.highmobility.basicoauth
 
 import android.app.Activity
@@ -5,15 +28,15 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import com.highmobility.autoapi.CommandResolver
-import com.highmobility.autoapi.DiagnosticsState
-import com.highmobility.autoapi.Failure
-import com.highmobility.autoapi.GetDiagnosticsState
+import com.highmobility.autoapi.Diagnostics
+import com.highmobility.autoapi.FailureMessage
 import com.highmobility.crypto.value.DeviceSerial
 import com.highmobility.hmkit.AccessTokenResponse
 import com.highmobility.hmkit.HMKit
 import com.highmobility.hmkit.Telematics
 import com.highmobility.hmkit.error.DownloadAccessCertificateError
 import com.highmobility.hmkit.error.TelematicsError
+import com.highmobility.value.Bytes
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import timber.log.Timber.e
@@ -139,16 +162,16 @@ class BasicOAuthActivity : Activity() {
         progressBar.visibility = View.VISIBLE
         textView.text = "Sending Get Diagnostics"
         // send a simple command to see everything worked
-        HMKit.getInstance().telematics.sendCommand(GetDiagnosticsState(), vehicleSerial, object :
+        HMKit.getInstance().telematics.sendCommand(Diagnostics.GetState(), vehicleSerial, object :
                 Telematics.CommandCallback {
-            override fun onCommandResponse(p0: com.highmobility.value.Bytes?) {
+            override fun onCommandResponse(p0: Bytes?) {
                 progressBar.visibility = View.GONE
                 val command = CommandResolver.resolve(p0)
 
                 when (command) {
-                    is DiagnosticsState -> textView.text =
+                    is Diagnostics.State -> textView.text =
                             "Got Diagnostics,\nmileage: ${command.mileage.value}"
-                    is Failure -> textView.text =
+                    is FailureMessage.State -> textView.text =
                             "Get Diagnostics failure:\n\n${command.failureReason.value}\n${command.failureDescription.value}"
                     else -> textView.text = "Unknown command response"
                 }
