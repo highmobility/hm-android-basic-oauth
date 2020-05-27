@@ -52,7 +52,7 @@ class BasicOAuthActivity : Activity() {
         plant(Timber.DebugTree())
 
         /*
-        Before using HMKit, you'll have to initialise the Manager singleton
+        Before using HMKit, you'll have to initialise the HMKit singleton
         with a snippet from the Platform Workspace:
 
           1. Sign in to the workspace
