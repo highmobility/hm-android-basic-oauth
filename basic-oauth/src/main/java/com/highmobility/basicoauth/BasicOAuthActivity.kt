@@ -51,42 +51,43 @@ class BasicOAuthActivity : Activity() {
         prefs = getSharedPreferences("prefs", 0)
         plant(Timber.DebugTree())
 
-        /*
-        Before using HMKit, you'll have to initialise the HMKit singleton
-        with a snippet from the Platform Workspace:
+        if (initialiseFromFileIfSnippetNotPresent() == false) {
+            /*
+            Before using HMKit, you'll have to initialise the HMKit singleton
+            with a snippet from the Platform Workspace:
 
-          1. Sign in to the workspace
-          2. Go to the LEARN section and choose Android
-          3. Follow the Getting Started instructions
+              1. Sign in to the workspace
+              2. Go to the LEARN section and choose Android
+              3. Follow the Getting Started instructions
 
-        By the end of the tutorial you will have a snippet for initialisation,
-        that looks something like this:
+            By the end of the tutorial you will have a snippet for initialisation,
+            that looks something like this:
 
-          HMKit.getInstance().initialise(
-            Base64String,
-            Base64String,
-            Base64String,
-            applicationContext
-          );
-        */
+              HMKit.getInstance().initialise(
+                Base64String,
+                Base64String,
+                Base64String,
+                applicationContext
+              );
+            */
 
-        // TODO: PASTE THE INITIALISE SNIPPET HERE
+            // TODO: PASTE THE INITIALISE SNIPPET HERE
 
-        /*
-         Before using the OAuth, it's required variables must be set:
-         - go to https://high-mobility.com/profile/oauth-client to get and paste:
-            * Auth URI
-            * Client ID
-            * redirectScheme (URL-scheme for iOS & Android)
-            * Token URI
-         - go to https://high-mobility.com/develop/
-            * choose one app and copy its Serial#/App Id (hex number)
-            * IMPORTANT: The app id must be the same that you initialise the SDK with.
-         - now fill in all the needed vars
-         */
-        button.setOnClickListener {
-            // TODO: SET THE OAUTH VARIABLES
-            HMKit.getInstance().oAuth.getAccessToken(
+            /*
+             Before using the OAuth, it's required variables must be set:
+             - go to https://high-mobility.com/profile/oauth-client to get and paste:
+                * Auth URI
+                * Client ID
+                * redirectScheme (URL-scheme for iOS & Android)
+                * Token URI
+             - go to https://high-mobility.com/develop/
+                * choose one app and copy its Serial#/App Id (hex number)
+                * IMPORTANT: The app id must be the same that you initialise the SDK with.
+             - now fill in all the needed vars
+             */
+            createAccessTokenButton.setOnClickListener {
+                // TODO: SET THE OAUTH VARIABLES
+                HMKit.getInstance().oAuth.getAccessToken(
                     this,
                     "appId",
                     "authUrl",
@@ -95,8 +96,9 @@ class BasicOAuthActivity : Activity() {
                     "tokenUrl",
                     null,
                     null
-            ) { accessToken, errorMessage ->
-                onAccessTokenResponse(accessToken, errorMessage)
+                ) { accessToken, errorMessage ->
+                    onAccessTokenResponse(accessToken, errorMessage)
+                }
             }
         }
 
@@ -126,6 +128,49 @@ class BasicOAuthActivity : Activity() {
         }*/
     }
 
+    /**
+     * Try and initialize with values from credentials.xml
+     */
+    private fun initialiseFromFileIfSnippetNotPresent(): Boolean {
+        if (HMKit.webUrl != null) return true // already initialised
+
+        try {
+            val credentials = Credentials(this)
+            HMKit.webUrl = credentials.getEnvironmentResource("webUrl")
+
+            if (HMKit.webUrl != null) {
+                HMKit.getInstance().initialise(
+                    credentials.getEnvironmentResource("deviceCert"),
+                    credentials.getEnvironmentResource("privateKey"),
+                    credentials.getEnvironmentResource("issuerPublicKey"),
+                    applicationContext
+                )
+
+                createAccessTokenButton.setOnClickListener {
+                    HMKit.getInstance().oAuth.getAccessToken(
+                        this,
+                        credentials.getEnvironmentResource("appId"),
+                        credentials.getEnvironmentResource("authUrl"),
+                        credentials.getEnvironmentResource("clientId"),
+                        credentials.getEnvironmentResource("redirectScheme"),
+                        credentials.getEnvironmentResource("tokenUrl"),
+                        null,
+                        null
+                    ) { accessToken, errorMessage ->
+                        onAccessTokenResponse(accessToken, errorMessage)
+                    }
+                }
+            }
+
+            return true
+        } catch (e: Exception) {
+            e(e)
+            // its ok, were initialised by snippet
+        }
+
+        return false
+    }
+
     var refreshToken: String?
         get() = prefs.getString("refreshToken", null)
         set(value) = prefs.edit().putString("refreshToken", value).apply()
@@ -143,36 +188,37 @@ class BasicOAuthActivity : Activity() {
             this.refreshToken = accessToken.refreshToken
             this.expireDate = (System.currentTimeMillis() / 1000).toInt() + accessToken.expiresIn
 
-            HMKit.getInstance().downloadAccessCertificate(accessToken.accessToken, object : HMKit.DownloadCallback {
-                override fun onDownloaded(vehicleSerial: DeviceSerial) {
-                    downloadVehicleStatus(vehicleSerial)
-                }
+            HMKit.getInstance().downloadAccessCertificate(
+                accessToken.accessToken,
+                object : HMKit.DownloadCallback {
+                    override fun onDownloaded(vehicleSerial: DeviceSerial) {
+                        downloadDiagnostics(vehicleSerial)
+                    }
 
-                override fun onDownloadFailed(error: DownloadAccessCertificateError) {
-                    onError("error downloading access certificate" + error.type + " " + error.message)
-                }
-            })
-        }
-        else {
+                    override fun onDownloadFailed(error: DownloadAccessCertificateError) {
+                        onError("error downloading access certificate" + error.type + " " + error.message)
+                    }
+                })
+        } else {
             onError(errorMessage!!)
         }
     }
 
-    private fun downloadVehicleStatus(vehicleSerial: DeviceSerial) {
+    private fun downloadDiagnostics(vehicleSerial: DeviceSerial) {
         progressBar.visibility = View.VISIBLE
         textView.text = "Sending Get Diagnostics"
         // send a simple command to see everything worked
         HMKit.getInstance().telematics.sendCommand(Diagnostics.GetState(), vehicleSerial, object :
-                Telematics.CommandCallback {
-            override fun onCommandResponse(p0: Bytes?) {
+            Telematics.CommandCallback {
+            override fun onCommandResponse(responseBytes: Bytes?) {
                 progressBar.visibility = View.GONE
-                val command = CommandResolver.resolve(p0)
+                val response = CommandResolver.resolve(responseBytes)
 
-                when (command) {
+                when (response) {
                     is Diagnostics.State -> textView.text =
-                            "Got Diagnostics,\nmileage: ${command.mileage.value}"
+                        "Got Diagnostics,\nmileage: ${response.fuelLevel.value}"
                     is FailureMessage.State -> textView.text =
-                            "Get Diagnostics failure:\n\n${command.failureReason.value}\n${command.failureDescription.value}"
+                        "Get Diagnostics failure:\n\n${response.failureReason.value}\n${response.failureDescription.value}"
                     else -> textView.text = "Unknown command response"
                 }
             }
