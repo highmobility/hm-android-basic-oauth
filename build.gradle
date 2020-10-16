@@ -27,19 +27,20 @@ task clean(type: Delete) {
 }
 
 // these are not release numbers. release numbers are in deploy.settings files.
+
 ext.ver = [
-        crypto    : "1.4.5",
-        utils     : "1.4.4",
-        hmkit     : "2.0.3",
-        autoApi   : "3.11.1",
-        compileSdk: 28
+        "hmkit-crypto"      : "1.4.6-dev",
+        "hmkit-utils"       : "1.4.5-dev",
+        "hmkit-android"     : "2.0.4-dev",
+        "hmkit-auto-api"    : "3.12.0-dev",
+        compileSdk          : 28
 ]
 
 ext.deps = [
-        "hmkit"   : "com.highmobility:hmkit-android:${ver.hmkit}@aar",
-        "crypto"  : "com.highmobility:hmkit-crypto:${ver.crypto}",
-        "utils"   : "com.highmobility:hmkit-utils:${ver.utils}",
-        "autoApi" : "com.highmobility:hmkit-auto-api:${ver.autoApi}",
+        "hmkit"   : "com.highmobility:hmkit-android:${ver."hmkit-android"}@aar",
+        "crypto"  : "com.highmobility:hmkit-crypto:${ver."hmkit-crypto"}",
+        "utils"   : "com.highmobility:hmkit-utils:${ver."hmkit-utils"}",
+        "autoApi" : "com.highmobility:hmkit-auto-api:${ver."hmkit-auto-api"}",
         "timber"  : "com.jakewharton.timber:timber:4.7.1",
         "volley"  : "com.android.volley:volley:1.1.1",
         "findBugs": 'com.google.code.findbugs:jsr305:3.0.2'
