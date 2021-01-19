@@ -150,10 +150,10 @@ class BasicOAuthActivity : Activity() {
                     HMKit.getInstance().oAuth.getAccessToken(
                         this,
                         credentials.getEnvironmentResource("appId"),
-                        credentials.getEnvironmentResource("authUrl"),
+                        credentials.getEnvironmentResource("authUri"),
                         credentials.getEnvironmentResource("clientId"),
-                        credentials.getEnvironmentResource("redirectScheme"),
-                        credentials.getEnvironmentResource("tokenUrl"),
+                        credentials.getEnvironmentResource("urlScheme"),
+                        credentials.getEnvironmentResource("tokenUri"),
                         null,
                         null
                     ) { accessToken, errorMessage ->
@@ -216,7 +216,7 @@ class BasicOAuthActivity : Activity() {
 
                 when (response) {
                     is Diagnostics.State -> textView.text =
-                        "Got Diagnostics,\nmileage: ${response.fuelLevel.value}"
+                        "Got Diagnostics,\nfuel level: ${response.fuelLevel.value}%"
                     is FailureMessage.State -> textView.text =
                         "Get Diagnostics failure:\n\n${response.failureReason.value}\n${response.failureDescription.value}"
                     else -> textView.text = "Unknown command response"
