@@ -4,7 +4,6 @@
 
 ## gradle properties
 local.properties
-gradle.properties
 
 # Ignore Gradle GUI config
 gradle-app.setting
