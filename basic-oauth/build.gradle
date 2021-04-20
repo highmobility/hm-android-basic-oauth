@@ -5,8 +5,6 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion ver.compileSdk
 
-    ndkVersion '20.1.5948944'
-
     defaultConfig {
         applicationId "com.highmobility.basicoauth"
         minSdkVersion 21
