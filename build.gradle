@@ -31,7 +31,7 @@ task clean(type: Delete) {
 ext.ver = [
         "hmkit-crypto"      : "1.4.6",
         "hmkit-utils"       : "1.4.5",
-        "hmkit-android"     : "2.0.7",
+        "hmkit-android"     : "2.0.8",
         "hmkit-auto-api"    : "13.1.1",
         compileSdk          : 28
 ]
