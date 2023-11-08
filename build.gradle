@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlinVersion = '1.7.20'
+    ext.kotlinVersion = '1.9.20'
     repositories {
         mavenCentral()
         google()
@@ -29,19 +29,13 @@ task clean(type: Delete) {
 // these are not release numbers. release numbers are in deploy.settings files.
 
 ext.ver = [
-        "hmkit-crypto"      : "1.4.6",
-        "hmkit-utils"       : "1.4.5",
-        "hmkit-android"     : "2.0.9",
         "hmkit-auto-api"    : "13.1.1",
         compileSdk          : 28
 ]
 
 ext.deps = [
-        "hmkit"   : "com.high-mobility:hmkit-android:${ver."hmkit-android"}@aar",
-        "crypto"  : "com.high-mobility:hmkit-crypto:${ver."hmkit-crypto"}",
-        "utils"   : "com.high-mobility:hmkit-utils:${ver."hmkit-utils"}",
         "autoApi" : "com.high-mobility:hmkit-auto-api:${ver."hmkit-auto-api"}",
-        "timber"  : "com.jakewharton.timber:timber:4.7.1",
+        "timber"  : "",
         "volley"  : "com.android.volley:volley:1.2.0",
         "findBugs": 'com.google.code.findbugs:jsr305:3.0.2'
 ]

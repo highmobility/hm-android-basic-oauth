@@ -1,14 +1,14 @@
 # Basic OAuth
 
 This sample app for Android uses the OAuth API of High-Mobility to have car access granted by the 
-owner. The OAuth flow is described in detail on https://high-mobility.com/learn/documentation/cloud-api/oauth2/intro/
+owner. The OAuth flow is described in detail on https://docs.high-mobility.com/guides/platform/oauth2-client-credentials/
 
 # Configuration
 
 Before running the app, make sure to configure the following:
 
 1. in `BasicOAuthActivity.kt`: Initialise HMKit with a valid device certificate from the Developer 
-Center https://high-mobility.com/develop/
+Center https://console.high-mobility.com
 2. In the Developer Center, go to the `OAuth2 Client` settings page
 3. Copy and insert the Auth URI, Client ID, redirectScheme (URL-scheme for iOS & Android), Token URI,
 and an app's Serial # / AppId, into the instance variables of `BasicOAuthActivity.kt`. All of this 

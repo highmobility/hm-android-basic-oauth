@@ -1,1 +1,3 @@
 include ':basic-oauth'
+include 'hm-oauth'
+

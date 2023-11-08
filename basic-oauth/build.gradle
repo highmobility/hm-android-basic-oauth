@@ -1,11 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 
 android {
     compileSdkVersion ver.compileSdk
     namespace 'com.highmobility.basicoauth'
+
+    buildFeatures {
+        viewBinding true
+    }
 
     defaultConfig {
         applicationId "com.highmobility.basicoauth"
@@ -31,20 +34,11 @@ android {
 
 dependencies {
     if (project.hasProperty('depLocation') == false || project.depLocation > 0) {
-        implementation(deps.hmkit) {
-            transitive = true
-        }
         implementation(deps.autoApi)
-        implementation(deps.crypto)
-        implementation(deps.utils)
     } else {
-        implementation project(path: ':hmkit-android')
-        implementation project(path: ':hmkit-crypto')
-        implementation project(path: ':hmkit-utils')
         implementation project(path: ':hmkit-auto-api')
     }
 
-    implementation deps.timber
-
+    implementation "com.jakewharton.timber:timber:5.0.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 }
